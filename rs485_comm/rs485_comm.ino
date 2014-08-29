@@ -4,7 +4,8 @@
 //from code by Igor Real 24-06-09
 //----------------------------------
 
-
+//heart of program are the functions below loop()
+//first thing to figure out is sendMSG()
 byte            data[12];
 unsigned long   previous_time;
 unsigned long   previous_time2;
