@@ -70,13 +70,10 @@ void loop() {
   char flag, CSR_address, payload_length;
   
   //header for packet to be sent. Includes checksum as last 4 bytes
-  char header[10];
+  char header[6];
   
   //checksum and header holders
   unsigned long header_checksum=0;
-  unsigned long header_long=0;
-  
-
 
   //Create the custom command packet for setting the power level to a group of thrusters
   //generate the header
@@ -92,14 +89,15 @@ void loop() {
   header[4] = CSR_address;
   header[5] = payload_length;
   
-  //generate header for checksum
-    for (char i=0; i++; i<5){
-      header_long += header[i] << (6-i);
-    }
-  
+  header_checksum = crc_string(header); 
+ /* 
+  header[6] = header_checksum >> 24;
+  header[7] = (header_checksum & 0xff0000)>> 16;
+  header[8] = (header_checksum & 0xff00)>> 8;
+  header[9] = header_checksum & 0xff;
   //header_checksum = bytearray(struct.pack('I', binascii.crc32(header))) 
-  
+ */
   mySerial.println ("hello Linksprite!");
-  Serial.println ("hello Linksprite!");
-  return;
+  Serial.println (header_checksum,HEX);
+
 }
