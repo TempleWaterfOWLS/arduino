@@ -4,6 +4,8 @@
 
 #include <WiShield.h>
 #include <WiServer.h>
+#include <SoftwareSerial.h>
+
 
 #define WIRELESS_MODE_INFRA	1
 #define WIRELESS_MODE_ADHOC	2
@@ -31,7 +33,7 @@ prog_uchar wep_keys[] PROGMEM = { 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08
 // infrastructure - connect to AP
 // adhoc - connect to another WiFi device
  unsigned char wireless_mode = WIRELESS_MODE_INFRA;
-// unsigned char wireless_mode = WIRELESS_MODE_ADHOC;
+//unsigned char wireless_mode = WIRELESS_MODE_ADHOC;
 
 unsigned char ssid_len;
 unsigned char security_passphrase_len;
@@ -55,78 +57,21 @@ boolean sendMyPage(char* URL) {
     return false;
 }
 
-
 void setup() {
   // Initialize WiServer and have it use the sendMyPage function to serve pages
   WiServer.init(sendMyPage);
   
   // Enable Serial output and ask WiServer to generate log messages (optional)
+  mySerial.begin(9600);
   Serial.begin(57600);
   WiServer.enableVerboseMode(true);
+  
 }
 
 void loop(){
-  WifiClient client = server.available();
-  
-  if(client){
-    // an http request ends with a blank line
-    boolean current_line_is_blank = true;
-    while (client.connected()) {
-     
-      if(client.available()) {
-      
-        char c = client.read();
-        // if we've gotten to the end of the line (received a newline
-        // character) and the line is blank, the http request has ended,
-        // so we can send a reply
-        if (inString.length() < 35) {
-            inString.concat(c);
-         } 
-        if (c == '\n' && current_line_is_blank) {
-                    
-          // send a standard http response header
-          client.println("HTTP/1.1 200 OK");
-          client.println("Content-Type: text/html");
-          client.println();
-          client.println("<html><body><form method=get>");
-          client.println("<p>Led controller</p>");
-         
-         for(int i=1;i < (numofleds + 1) ;i++){ 
-           Led = String("led") + i;
-           
-          if(inString.indexOf(Led+"=on")>0 || inString.indexOf("all=on")>0){
-            Serial.println(Led+"on");
-            digitalWrite(led[i], HIGH);
-            value[i] = "off"; 
-          }else if(inString.indexOf(Led+"=off")>0 || inString.indexOf("all=off")>0 ){          
-            Serial.println(Led+"on");
-            digitalWrite(led[i], LOW);
-            value[i] = "on";
-          }
-           client.println("<br>"+Led+"  <input type=submit name="+Led+" value="+value[i]+">");
-         }
-         client.println("<br>All <input type=submit name=all value=on><input type=submit name=all value=off>");
-         client.println("</from></html></body>");
-          break;
-        }
-        if (c == '\n') {
-          // we're starting a new line
-          current_line_is_blank = true;
-        } else if (c != '\r') {
-          // we've gotten a character on the current line
-          current_line_is_blank = false;
-        }
-      }
-    }
-    // give the web browser time to receive the data
-    delay(1);
-    inString = "";
-    client.stop();
-  }
-
   // Run WiServer
   WiServer.server_task();
- 
+  mySerial.println("Hello World!"); 
   delay(10);
 }
 
