@@ -49,10 +49,15 @@ boolean sendMyPage(char* URL) {
         WiServer.print("<html>");
         WiServer.print("Hello World!");
         WiServer.print("</html>");
-        
-        // URL was recognized
         return true;
     }
+    // Check Button Webpage
+    if (strcmp(URL,"/button") == 0) {
+      WiServer.print("<html>\n\r\n<center><h1>Hello World!! I am WiShield</h1><form method=\"get\" action=\"0\">Toggle LED:<input type=\"submit\" name=\"0\" value=\"LED1\"></input></form></center></html>");
+      return true;  
+    }
+      
+   
     // URL not found
     return false;
 }
@@ -62,7 +67,7 @@ void setup() {
   WiServer.init(sendMyPage);
   
   // Enable Serial output and ask WiServer to generate log messages (optional)
-  mySerial.begin(9600);
+  
   Serial.begin(57600);
   WiServer.enableVerboseMode(true);
   
@@ -71,7 +76,7 @@ void setup() {
 void loop(){
   // Run WiServer
   WiServer.server_task();
-  mySerial.println("Hello World!"); 
+
   delay(10);
 }
 
