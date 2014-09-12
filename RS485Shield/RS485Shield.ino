@@ -1,6 +1,6 @@
-#include <SoftwareSerial.h>
-#include <avr/pgmspace.h>
- 
+//#include <SoftwareSerial.h>
+//#include <avr/pgmspace.h>
+
 //VRCSR protocol defines
 const char SYNC_REQUEST[]  = {0x5F, 0xF5};
 const char SYNC_RESPONSE[] =  {0x0F,0xF0};
@@ -47,16 +47,16 @@ unsigned long crc_update(unsigned long crc, byte data)
 unsigned long crc_string(char *s)
 {
   unsigned long crc = ~0L;
-  while (*s)
+  while (*s){
     crc = crc_update(crc, *s++);
+  }
   crc = ~crc;
   return crc;
 }
 
-SoftwareSerial mySerial(3,2);
-
+//SoftwareSerial mySerial(3,2);
 void setup() {
-  mySerial.begin (9600);
+//  mySerial.begin (9600);
   Serial.begin(9600);
 }
  
@@ -67,13 +67,19 @@ void loop() {
   char node_id = 0;
   //thrust. is a percentage of power from -1 to 1. only 2 motors on bus.
   float thrust[2];
+  unsigned long thrust_long[2];
   char flag, CSR_address, payload_length;
   
   //header for packet to be sent. Includes checksum as last 4 bytes
   char header[6];
+  char header_xsum[4];
+  char payload_xsum[4];
+  char payload[10];
+  char packet[6+4+4+10];
+  char index= 0;
   
   //checksum and header holders
-  unsigned long header_checksum=0;
+  unsigned long checksum=0;
 
   //Create the custom command packet for setting the power level to a group of thrusters
   //generate the header
@@ -89,15 +95,62 @@ void loop() {
   header[4] = CSR_address;
   header[5] = payload_length;
   
-  header_checksum = crc_string(header); 
- /* 
-  header[6] = header_checksum >> 24;
-  header[7] = (header_checksum & 0xff0000)>> 16;
-  header[8] = (header_checksum & 0xff00)>> 8;
-  header[9] = header_checksum & 0xff;
+  checksum = crc_string(header); 
+  
+  header_xsum[0] = checksum >> 24;
+  header_xsum[1] = (checksum & 0xff0000)>> 16;
+  header_xsum[2] = (checksum & 0xff00)>> 8;
+  header_xsum[3] = checksum & 0xff;
   //header_checksum = bytearray(struct.pack('I', binascii.crc32(header))) 
- */
-  mySerial.println ("hello Linksprite!");
-  Serial.println (header_checksum,HEX);
+//  mySerial.println ("hello Linksprite!");
+
+  payload[0] = PROPULSION_COMMAND;
+  payload[1] = node_id;
+  thrust[0] = 0.11;
+  thrust[1] = 0.06;
+  thrust_long[0] = *(long*)&thrust[0];
+  thrust_long[1] = *(long*)&thrust[1];  
+  payload[2] = thrust_long[0] >> 24;
+  payload[3] = (thrust_long[0] & 0xff0000)>> 16;
+  payload[4] = (thrust_long[0] & 0xff00)>> 8;
+  payload[5] = thrust_long[0] & 0xff;
+  payload[6] = thrust_long[1] >> 24;
+  payload[7] = (thrust_long[1] & 0xff0000)>> 16;
+  payload[8] = (thrust_long[1] & 0xff00)>> 8;
+  payload[9] = thrust_long[1] & 0xff;
+  
+  checksum = crc_string(payload);
+  payload_xsum[0] = checksum >> 24;
+  payload_xsum[1] = (checksum & 0xff0000)>> 16;
+  payload_xsum[2] = (checksum & 0xff00)>> 8;
+  payload_xsum[3] = checksum & 0xff;
+  
+  for(char i=0; i<6; i++){
+    packet[index] = header[i];
+    index++;
+  }
+  for(char i=0; i<4; i++){
+    packet[index] = header_xsum[i];
+    index++;
+  }
+  for(char i=0; i<10; i++){
+    packet[index] = payload[i];
+    index++;
+  }
+  for(char i=0; i<4; i++){
+    packet[index] =payload_xsum[i];
+    index++;
+  }
+  
+  
+ /* Serial.println("thrust_long");
+  Serial.println(thrust_long[0], HEX);
+  Serial.println(thrust_long[1], HEX);  
+ */ for (char i=0; i<24; i++ ){
+    Serial.print("packet[");
+    Serial.print(i, HEX);
+    Serial.print("]\n");
+    Serial.println(packet[i], HEX);
+  }
 
 }
