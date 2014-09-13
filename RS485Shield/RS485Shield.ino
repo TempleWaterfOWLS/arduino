@@ -1,8 +1,8 @@
-//#include <SoftwareSerial.h>
-//#include <avr/pgmspace.h>
+#include <SoftwareSerial.h>
+#include <avr/pgmspace.h>
 
 //VRCSR protocol defines
-const char SYNC_REQUEST[]  = {0x5F, 0xF5};
+const char SYNC_REQUEST[]  = {0xF5, 0x5F};
 const char SYNC_RESPONSE[] =  {0x0F,0xF0};
 const char PROTOCOL_VRCSR_HEADER_SIZE = 6;
 const char PROTOCOL_VRCSR_XSUM_SIZE = 4;
@@ -56,7 +56,7 @@ unsigned long crc_string(char *s)
 
 //SoftwareSerial mySerial(3,2);
 void setup() {
-//  mySerial.begin (9600);
+//  mySerial.begin (115200);
   Serial.begin(9600);
 }
  
@@ -64,7 +64,7 @@ void loop() {
   //group id for the request packet
   char group_id = THRUSTER_GROUP_ID;
   //motor from which to get response. motors
-  char node_id = 0;
+  char node_id = 100;
   //thrust. is a percentage of power from -1 to 1. only 2 motors on bus.
   float thrust[2];
   unsigned long thrust_long[2];
@@ -94,41 +94,43 @@ void loop() {
   header[3] = flag;
   header[4] = CSR_address;
   header[5] = payload_length;
-  
-  checksum = crc_string(header); 
-  
-  header_xsum[0] = checksum >> 24;
-  header_xsum[1] = (checksum & 0xff0000)>> 16;
-  header_xsum[2] = (checksum & 0xff00)>> 8;
-  header_xsum[3] = checksum & 0xff;
+ 
+  checksum = crc_string(&header[0]); 
+Serial.println("checksum");
+Serial.println(checksum,HEX);
+  header_xsum[3] = checksum >> 24;
+  header_xsum[2] = (checksum & 0xff0000)>> 16;
+  header_xsum[1] = (checksum & 0xff00)>> 8;
+  header_xsum[0] = checksum & 0xff;
   //header_checksum = bytearray(struct.pack('I', binascii.crc32(header))) 
 //  mySerial.println ("hello Linksprite!");
 
   payload[0] = PROPULSION_COMMAND;
   payload[1] = node_id;
-  thrust[0] = 0.11;
+  thrust[0] = 0.06;
   thrust[1] = 0.06;
   thrust_long[0] = *(long*)&thrust[0];
   thrust_long[1] = *(long*)&thrust[1];  
-  payload[2] = thrust_long[0] >> 24;
-  payload[3] = (thrust_long[0] & 0xff0000)>> 16;
-  payload[4] = (thrust_long[0] & 0xff00)>> 8;
-  payload[5] = thrust_long[0] & 0xff;
-  payload[6] = thrust_long[1] >> 24;
-  payload[7] = (thrust_long[1] & 0xff0000)>> 16;
-  payload[8] = (thrust_long[1] & 0xff00)>> 8;
-  payload[9] = thrust_long[1] & 0xff;
+  payload[5] = thrust_long[0] >> 24;
+  payload[4] = (thrust_long[0] & 0xff0000)>> 16;
+  payload[3] = (thrust_long[0] & 0xff00)>> 8;
+  payload[2] = thrust_long[0] & 0xff;
+  payload[9] = thrust_long[1] >> 24;
+  payload[8] = (thrust_long[1] & 0xff0000)>> 16;
+  payload[7] = (thrust_long[1] & 0xff00)>> 8;
+  payload[6] = thrust_long[1] & 0xff;
   
-  checksum = crc_string(payload);
-  payload_xsum[0] = checksum >> 24;
-  payload_xsum[1] = (checksum & 0xff0000)>> 16;
-  payload_xsum[2] = (checksum & 0xff00)>> 8;
-  payload_xsum[3] = checksum & 0xff;
+  checksum = crc_string(&payload[0]);
+  payload_xsum[3] = checksum >> 24;
+  payload_xsum[2] = (checksum & 0xff0000)>> 16;
+  payload_xsum[1] = (checksum & 0xff00)>> 8;
+  payload_xsum[0] = checksum & 0xff;
   
   for(char i=0; i<6; i++){
     packet[index] = header[i];
     index++;
   }
+  
   for(char i=0; i<4; i++){
     packet[index] = header_xsum[i];
     index++;
@@ -141,16 +143,19 @@ void loop() {
     packet[index] =payload_xsum[i];
     index++;
   }
-  
-  
- /* Serial.println("thrust_long");
-  Serial.println(thrust_long[0], HEX);
+  //send packet
+  for (char i=0; i<24; i++){
+//   Serial.println(packet[i], HEX); 
+}
+//  Serial.println("Start of packet");
+//  Serial.write(packet[1]);
+/*  Serial.println(thrust_long[0], HEX);
   Serial.println(thrust_long[1], HEX);  
- */ for (char i=0; i<24; i++ ){
+ for (char i=0; i<24; i++ ){
     Serial.print("packet[");
     Serial.print(i, HEX);
     Serial.print("]\n");
     Serial.println(packet[i], HEX);
   }
-
+*/
 }
