@@ -125,10 +125,11 @@ Serial.println(checksum,HEX);
   payload_xsum[2] = (checksum & 0xff0000)>> 16;
   payload_xsum[1] = (checksum & 0xff00)>> 8;
   payload_xsum[0] = checksum & 0xff;
-  
+ Serial.println("header");
   for(char i=0; i<6; i++){
     packet[index] = header[i];
     index++;
+    Serial.println(header[i], HEX);
   }
   
   for(char i=0; i<4; i++){
