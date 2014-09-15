@@ -27,6 +27,7 @@ const char RESPONSE_THRUSTER_STANDARD_LENGTH = 1 + 4 * 4 + 1 + 1;
 //The proppulsion command packets are typically sent as a multicast to a group ID defined for thrusters
 const char THRUSTER_GROUP_ID = 0x81;
 
+//lookup table to speed up checksum computation
 static PROGMEM prog_uint32_t crc_table[16] = {
     0x00000000, 0x1db71064, 0x3b6e20c8, 0x26d930ac,
     0x76dc4190, 0x6b6b51f4, 0x4db26158, 0x5005713c,
@@ -34,6 +35,7 @@ static PROGMEM prog_uint32_t crc_table[16] = {
     0x9b64c2b0, 0x86d3d2d4, 0xa00ae278, 0xbdbdf21c
 };
 
+//checsum calculation
 unsigned long crc_update(unsigned long crc, byte data)
 {
     byte tbl_idx;
@@ -44,10 +46,11 @@ unsigned long crc_update(unsigned long crc, byte data)
     return crc;
 }
 
-unsigned long crc_string(char *s)
+//checksum
+unsigned long crc_string(char *s,char len)
 {
   unsigned long crc = ~0L;
-  while (*s){
+  for(char i=0; i < len; i++){
     crc = crc_update(crc, *s++);
   }
   crc = ~crc;
@@ -57,7 +60,7 @@ unsigned long crc_string(char *s)
 //SoftwareSerial mySerial(3,2);
 void setup() {
 //  mySerial.begin (115200);
-  Serial.begin(9600);
+  Serial.begin(115200);
 }
  
 void loop() {
@@ -75,7 +78,7 @@ void loop() {
   char header_xsum[4];
   char payload_xsum[4];
   char payload[10];
-  char packet[6+4+4+10];
+  byte packet[6+4+4+10];
   char index= 0;
   
   //checksum and header holders
@@ -95,9 +98,8 @@ void loop() {
   header[4] = CSR_address;
   header[5] = payload_length;
  
-  checksum = crc_string(&header[0]); 
-Serial.println("checksum");
-Serial.println(checksum,HEX);
+  checksum = crc_string(&header[0], sizeof(header)); 
+
   header_xsum[3] = checksum >> 24;
   header_xsum[2] = (checksum & 0xff0000)>> 16;
   header_xsum[1] = (checksum & 0xff00)>> 8;
@@ -120,16 +122,16 @@ Serial.println(checksum,HEX);
   payload[7] = (thrust_long[1] & 0xff00)>> 8;
   payload[6] = thrust_long[1] & 0xff;
   
-  checksum = crc_string(&payload[0]);
+  checksum = crc_string(&payload[0], sizeof(payload));
   payload_xsum[3] = checksum >> 24;
   payload_xsum[2] = (checksum & 0xff0000)>> 16;
   payload_xsum[1] = (checksum & 0xff00)>> 8;
   payload_xsum[0] = checksum & 0xff;
- Serial.println("header");
+// Serial.println("header");
   for(char i=0; i<6; i++){
     packet[index] = header[i];
     index++;
-    Serial.println(header[i], HEX);
+//    Serial.println(header[i], HEX);
   }
   
   for(char i=0; i<4; i++){
@@ -145,9 +147,10 @@ Serial.println(checksum,HEX);
     index++;
   }
   //send packet
-  for (char i=0; i<24; i++){
-//   Serial.println(packet[i], HEX); 
-}
+ // for (char i=0; i<24; i++){
+  Serial.write(packet,sizeof(packet));
+  delay(100);
+//  }
 //  Serial.println("Start of packet");
 //  Serial.write(packet[1]);
 /*  Serial.println(thrust_long[0], HEX);
