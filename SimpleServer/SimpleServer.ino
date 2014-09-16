@@ -4,9 +4,6 @@
 #define WIRELESS_MODE_INFRA   1
 #define WIRELESS_MODE_ADHOC   2
 
-#define ledPin1 5
-#define ledPin2 6
-#define ledPin3 7
 
 
 // Wireless configuration parameters ----------------------------------------
