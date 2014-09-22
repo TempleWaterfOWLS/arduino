@@ -1,5 +1,5 @@
-#include <SoftwareSerial.h>
 #include <avr/pgmspace.h>
+
 
 //VRCSR protocol defines
 const char SYNC_REQUEST[]  = {0xF5, 0x5F};
@@ -57,19 +57,10 @@ unsigned long crc_string(char *s,char len)
   return crc;
 }
 
-//SoftwareSerial mySerial(3,2);
-void setup() {
-//  mySerial.begin (115200);
-  Serial.begin(115200);
-}
- 
-void loop() {
+byte set_motors_thrust(char node_id_respond, float thrust[], int thrust_length) {
   //group id for the request packet
   char group_id = THRUSTER_GROUP_ID;
-  //motor from which to get response. motors
-  char node_id = 100;
-  //thrust. is a percentage of power from -1 to 1. only 2 motors on bus.
-  float thrust[2];
+  
   unsigned long thrust_long[2];
   char flag, CSR_address, payload_length;
   
@@ -88,7 +79,7 @@ void loop() {
   //generate the header
   flag = RESPONSE_THRUSTER_STANDARD;
   CSR_address = ADDR_CUSTOM_COMMAND;
-  payload_length = 2 + sizeof(thrust);
+  payload_length = 2 + thrust_length;
   
   //create the header
   header[0] = SYNC_REQUEST[0];
@@ -104,13 +95,11 @@ void loop() {
   header_xsum[2] = (checksum & 0xff0000)>> 16;
   header_xsum[1] = (checksum & 0xff00)>> 8;
   header_xsum[0] = checksum & 0xff;
-  //header_checksum = bytearray(struct.pack('I', binascii.crc32(header))) 
-//  mySerial.println ("hello Linksprite!");
 
   payload[0] = PROPULSION_COMMAND;
-  payload[1] = node_id;
-  thrust[0] = 0.06;
-  thrust[1] = 0.06;
+  payload[1] = node_id_respond;
+ // thrust[0] = thrust_1;
+ // thrust[1] = thrust_2;
   thrust_long[0] = *(long*)&thrust[0];
   thrust_long[1] = *(long*)&thrust[1];  
   payload[5] = thrust_long[0] >> 24;
@@ -127,11 +116,10 @@ void loop() {
   payload_xsum[2] = (checksum & 0xff0000)>> 16;
   payload_xsum[1] = (checksum & 0xff00)>> 8;
   payload_xsum[0] = checksum & 0xff;
-// Serial.println("header");
+
   for(char i=0; i<6; i++){
     packet[index] = header[i];
     index++;
-//    Serial.println(header[i], HEX);
   }
   
   for(char i=0; i<4; i++){
@@ -148,8 +136,12 @@ void loop() {
   }
   //send packet
  // for (char i=0; i<24; i++){
-  Serial.write(packet,sizeof(packet));
-  delay(100);
+  Serial3.write(packet,sizeof(packet));
+  
+  //1 if true, in future expand for error checking?
+  return 1;
+  
+//  delay(100);
 //  }
 //  Serial.println("Start of packet");
 //  Serial.write(packet[1]);
@@ -162,4 +154,18 @@ void loop() {
     Serial.println(packet[i], HEX);
   }
 */
+}
+void setup() {
+  Serial3.begin(115200);
+//  Serial.begin(9600);
+}
+
+void loop(){
+  char node_id=100;
+  byte response_data[5];
+  float thrust[2];
+  thrust[0] = 0.06;
+  thrust[1] = 0.06;
+  set_motors_thrust(node_id,thrust, sizeof(thrust)); 
+  delay(100);  
 }
