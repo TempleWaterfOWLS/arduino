@@ -129,7 +129,6 @@ void set_motor_params(char node_id)
 void check_httpcontents(String readString)
 {
   
-  excelsior_lyfe = false;
   if (readString.indexOf("GET /?M1_0") != -1)
   {
     // Apply Code to set motor 1 to 0% speed
@@ -216,6 +215,7 @@ void check_httpcontents(String readString)
   
   else if (readString.indexOf("GET /?forward") != -1)
   {
+      T_HTTP = millis();
       excelsior_lyfe = true;
       Serial.println("FORWARD WAS PRESSED");
       set_motors_thrust(node_id,thrust,sizeof(thrust));
@@ -243,8 +243,7 @@ void get_requests(EthernetClient client)
          Serial.println("check_httpcontents");
          Serial.println(readString);
          check_httpcontents(readString);
-         T_HTTP = millis();
-+         readString = "";
+         readString = "";
          client.println("</html>");
          break;
         }
@@ -279,7 +278,7 @@ void update_motors(void)
      Serial.println(node_id);
      set_motors_thrust(node_id,thrust,sizeof(thrust));
 
-   } 
+  } 
   else if(T_HTTP == T_CUR)
   {
     return;
