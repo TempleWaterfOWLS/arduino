@@ -6,7 +6,6 @@
  * Ethernet shield attached to pins 10, 11, 12, 13
  * RS485 shield RX/TX attached to pins 14,15
  * Motor connected somewhere
-
  */
  
 #include <avr/pgmspace.h>
@@ -37,10 +36,10 @@ const char RESPONSE_THRUSTER_STANDARD_LENGTH = 1 + 4 * 4 + 1 + 1;
 const char THRUSTER_GROUP_ID = 0x81;
 //lookup table to speed up checksum computation
 static PROGMEM prog_uint32_t crc_table[16] = {
-0x00000000, 0x1db71064, 0x3b6e20c8, 0x26d930ac,
-0x76dc4190, 0x6b6b51f4, 0x4db26158, 0x5005713c,
-0xedb88320, 0xf00f9344, 0xd6d6a3e8, 0xcb61b38c,
-0x9b64c2b0, 0x86d3d2d4, 0xa00ae278, 0xbdbdf21c
+  0x00000000, 0x1db71064, 0x3b6e20c8, 0x26d930ac,
+  0x76dc4190, 0x6b6b51f4, 0x4db26158, 0x5005713c,
+  0xedb88320, 0xf00f9344, 0xd6d6a3e8, 0xcb61b38c,
+  0x9b64c2b0, 0x86d3d2d4, 0xa00ae278, 0xbdbdf21c
 };
 
 // Enter a MAC address and IP address for your controller below.
@@ -289,6 +288,32 @@ void update_motors(void)
   }
 }
 
+//asks both motor controllers for information and prints output
+void get_motor_condition(){
+  char node_id[]={0,1};
+  char response;
+  //get information from motor controller node 0
+  set_motors_thrust(node_id[0],thrust,sizeof(thrust));
+  delay(100);
+  if (Serial3.available()){
+    Serial.println("Data from motorC node 0");
+    while (Serial3.available()>0){
+        response= Serial3.read();	//read Serial        
+        Serial.println(response, HEX); 
+    }
+  }
+  //get information from motor controller node 1
+  set_motors_thrust(node_id[1],thrust,sizeof(thrust));
+  delay(100);
+  if (Serial3.available()){
+    Serial.println("Data from motorC node 1");
+    while (Serial3.available()>0){
+        response= Serial3.read();	//read Serial        
+        Serial.println(response, HEX); 
+    }
+  }
+}
+
 void setup()
 {
   // Open serial communications and wait for port to open:
@@ -304,123 +329,110 @@ void setup()
 
 void loop() {
   // Get current time
-  T_CUR = millis();
+/*  T_CUR = millis();
   // listen for incoming clients
   EthernetClient client = server.available();
   if (client) 
   {
     Serial.println("new client");
     get_requests(client);
-  }
+  }*/
   update_motors();
+  get_motor_condition();
   // give the web browser time to receive the data
-  delay(1);
+  delay(1000);
   // close the connection:
-  client.stop();
+//  client.stop();
 }
 
-//checsum calculation
+//checksum calculation
 unsigned long crc_update(unsigned long crc, byte data)
 {
-byte tbl_idx;
-tbl_idx = crc ^ (data >> (0 * 4));
-crc = pgm_read_dword_near(crc_table + (tbl_idx & 0x0f)) ^ (crc >> 4);
-tbl_idx = crc ^ (data >> (1 * 4));
-crc = pgm_read_dword_near(crc_table + (tbl_idx & 0x0f)) ^ (crc >> 4);
-return crc;
+  byte tbl_idx;
+  tbl_idx = crc ^ (data >> (0 * 4));
+  crc = pgm_read_dword_near(crc_table + (tbl_idx & 0x0f)) ^ (crc >> 4);
+  tbl_idx = crc ^ (data >> (1 * 4));
+  crc = pgm_read_dword_near(crc_table + (tbl_idx & 0x0f)) ^ (crc >> 4);
+  return crc;
 }
 //checksum
 unsigned long crc_string(char *s,char len)
 {
-unsigned long crc = ~0L;
-for(char i=0; i < len; i++){
-crc = crc_update(crc, *s++);
-}
-crc = ~crc;
-return crc;
+  unsigned long crc = ~0L;
+  for(char i=0; i < len; i++){
+    crc = crc_update(crc, *s++);
+    }
+  crc = ~crc;
+  return crc;
 }
 byte set_motors_thrust(char node_id_respond, float thrust[], int thrust_length) {
-//group id for the request packet
-char group_id = THRUSTER_GROUP_ID;
-unsigned long thrust_long[2];
-char flag, CSR_address, payload_length;
-//header for packet to be sent. Includes checksum as last 4 bytes
-char header[6];
-char header_xsum[4];
-char payload_xsum[4];
-char payload[10];
-byte packet[6+4+4+10];
-char index= 0;
-//checksum and header holders
-unsigned long checksum=0;
-//Create the custom command packet for setting the power level to a group of thrusters
-//generate the header
-flag = RESPONSE_THRUSTER_STANDARD;
-CSR_address = ADDR_CUSTOM_COMMAND;
-payload_length = 2 + thrust_length;
-//create the header
-header[0] = SYNC_REQUEST[0];
-header[1] = SYNC_REQUEST[1];
-header[2] = group_id;
-header[3] = flag;
-header[4] = CSR_address;
-header[5] = payload_length;
-checksum = crc_string(&header[0], sizeof(header));
-header_xsum[3] = checksum >> 24;
-header_xsum[2] = (checksum & 0xff0000)>> 16;
-header_xsum[1] = (checksum & 0xff00)>> 8;
-header_xsum[0] = checksum & 0xff;
-payload[0] = PROPULSION_COMMAND;
-payload[1] = node_id_respond;
-// thrust[0] = thrust_1;
-// thrust[1] = thrust_2;
-thrust_long[0] = *(long*)&thrust[0];
-thrust_long[1] = *(long*)&thrust[1];
-payload[5] = thrust_long[0] >> 24;
-payload[4] = (thrust_long[0] & 0xff0000)>> 16;
-payload[3] = (thrust_long[0] & 0xff00)>> 8;
-payload[2] = thrust_long[0] & 0xff;
-payload[9] = thrust_long[1] >> 24;
-payload[8] = (thrust_long[1] & 0xff0000)>> 16;
-payload[7] = (thrust_long[1] & 0xff00)>> 8;
-payload[6] = thrust_long[1] & 0xff;
-checksum = crc_string(&payload[0], sizeof(payload));
-payload_xsum[3] = checksum >> 24;
-payload_xsum[2] = (checksum & 0xff0000)>> 16;
-payload_xsum[1] = (checksum & 0xff00)>> 8;
-payload_xsum[0] = checksum & 0xff;
-for(char i=0; i<6; i++){
-packet[index] = header[i];
-index++;
-}
-for(char i=0; i<4; i++){
-packet[index] = header_xsum[i];
-index++;
-}
-for(char i=0; i<10; i++){
-packet[index] = payload[i];
-index++;
-}
-for(char i=0; i<4; i++){
-packet[index] =payload_xsum[i];
-index++;
-}
-//send packet
-// for (char i=0; i<24; i++){
-Serial3.write(packet,sizeof(packet));
-//1 if true, in future expand for error checking?
-return 1;
-// delay(100);
-// }
-// Serial.println("Start of packet");
-// Serial.write(packet[1]);
-/* Serial.println(thrust_long[0], HEX);
-Serial.println(thrust_long[1], HEX);
-for (char i=0; i<24; i++ ){
-Serial.print("packet[");
-Serial.print(i, HEX);
-Serial.print("]\n");
-Serial.println(packet[i], HEX);
-}
-*/
+  //group id for the request packet
+  char group_id = THRUSTER_GROUP_ID;
+  unsigned long thrust_long[2];
+  char flag, CSR_address, payload_length;
+  //header for packet to be sent. Includes checksum as last 4 bytes
+  char header[6];
+  char header_xsum[4];
+  char payload_xsum[4];
+  char payload[10];
+  byte packet[6+4+4+10];
+  char index= 0;
+  //checksum and header holders
+  unsigned long checksum=0;
+  //Create the custom command packet for setting the power level to a group of thrusters
+  //generate the header
+  flag = RESPONSE_THRUSTER_STANDARD;
+  CSR_address = ADDR_CUSTOM_COMMAND;
+  payload_length = 2 + thrust_length;
+  //create the header
+  header[0] = SYNC_REQUEST[0];
+  header[1] = SYNC_REQUEST[1];
+  header[2] = group_id;
+  header[3] = flag;
+  header[4] = CSR_address;
+  header[5] = payload_length;
+  checksum = crc_string(&header[0], sizeof(header));
+  header_xsum[3] = checksum >> 24;
+  header_xsum[2] = (checksum & 0xff0000)>> 16;
+  header_xsum[1] = (checksum & 0xff00)>> 8;
+  header_xsum[0] = checksum & 0xff;
+  payload[0] = PROPULSION_COMMAND;
+  payload[1] = node_id_respond;
+  thrust_long[0] = *(long*)&thrust[0];
+  thrust_long[1] = *(long*)&thrust[1];
+  payload[5] = thrust_long[0] >> 24;
+  payload[4] = (thrust_long[0] & 0xff0000)>> 16;
+  payload[3] = (thrust_long[0] & 0xff00)>> 8;
+  payload[2] = thrust_long[0] & 0xff;
+  payload[9] = thrust_long[1] >> 24;
+  payload[8] = (thrust_long[1] & 0xff0000)>> 16;
+  payload[7] = (thrust_long[1] & 0xff00)>> 8;
+  payload[6] = thrust_long[1] & 0xff;
+  checksum = crc_string(&payload[0], sizeof(payload));
+  payload_xsum[3] = checksum >> 24;
+  payload_xsum[2] = (checksum & 0xff0000)>> 16;
+  payload_xsum[1] = (checksum & 0xff00)>> 8;
+  payload_xsum[0] = checksum & 0xff;
+  for(char i=0; i<6; i++){
+    packet[index] = header[i];
+    index++;
+  }
+  for(char i=0; i<4; i++){
+    packet[index] = header_xsum[i];
+    index++;
+  }
+  for(char i=0; i<10; i++){
+    packet[index] = payload[i];
+    index++;
+  }
+  for(char i=0; i<4; i++){
+    packet[index] =payload_xsum[i];
+    index++;
+  }
+  //send packet
+  Serial3.write(packet,sizeof(packet));
+  
+  //1 if true, in future expand for error checking?
+  return 1;
+
 }
