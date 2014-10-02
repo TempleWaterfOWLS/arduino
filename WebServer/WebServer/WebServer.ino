@@ -220,6 +220,12 @@ void check_httpcontents(String readString)
       Serial.println("FORWARD WAS PRESSED");
       set_motors_thrust(node_id,thrust,sizeof(thrust));
   }
+  else if (readString.indexOf("pythoninfo") != -1)
+  {
+     Serial.println("python info requested");
+     // PLACEHOLDER FUNCTION CALL
+     send_hex_data(); 
+  }
   return;
 }
 
@@ -423,4 +429,9 @@ Serial.print("]\n");
 Serial.println(packet[i], HEX);
 }
 */
+}
+
+void send_hex_data(void)
+{
+ return; 
 }
