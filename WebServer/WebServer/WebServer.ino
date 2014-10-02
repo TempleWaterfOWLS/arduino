@@ -70,6 +70,7 @@ String motor_speed = String(10);
 float thrust[2] = {0.0,0.0};
 char node_id = 100;
 boolean excelsior_lyfe = false;
+char motorResponseStorage[65];
 
 void render_mainpage(EthernetClient client)
 {
@@ -299,14 +300,20 @@ void update_motors(void)
 void get_motor_condition(){
   char node_id[]={0,1};
   char response;
+  int offset = 0;
   //get information from motor controller node 0
   set_motors_thrust(node_id[0],thrust,sizeof(thrust));
+  // Consider clearing global buffer. Could replace 0 with a string to show non-atomicity
+  memset(&motorResponseStorage[0],0, sizeof(motorResponseStorage));
   delay(100);
   if (Serial3.available()){
     Serial.println("Data from motorC node 0");
     while (Serial3.available()>0){
         response= Serial3.read();	//read Serial        
         Serial.println(response, HEX); 
+        // Write response to global storage variable
+        motorResponseStorage[offset] = response;
+        offset++; 
     }
   }
   //get information from motor controller node 1
