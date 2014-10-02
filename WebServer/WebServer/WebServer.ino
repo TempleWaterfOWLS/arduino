@@ -316,6 +316,8 @@ void get_motor_condition(){
         offset++; 
     }
   }
+  Serial.println("New stored array is: ");
+  Serial.print(motorResponseStorage);
   //get information from motor controller node 1
   set_motors_thrust(node_id[1],thrust,sizeof(thrust));
   delay(100);
