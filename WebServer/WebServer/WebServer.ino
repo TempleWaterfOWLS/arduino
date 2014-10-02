@@ -12,7 +12,10 @@
 #include <SPI.h>
 #include <Ethernet.h>
 #include <String.h>
+#include <ros.h>
 
+//setup ros node and publisher
+ros::Publisher pub_humidity("humidity_sensor", &humidity_msg);
 //VRCSR protocol defines
 const char SYNC_REQUEST[] = {0xF5, 0x5F};
 const char SYNC_RESPONSE[] = {0x0F,0xF0};
