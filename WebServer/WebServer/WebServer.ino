@@ -13,6 +13,13 @@
 #include <Ethernet.h>
 #include <String.h>
 #include <ros.h>
+#include <std_msgs/String.h>
+
+//ROS defines
+ros::NodeHandle nh;
+std_msgs::String str_msg;
+ros::Publisher motor_response("motor_response", &str_msg);
+
 
 //setup ros node and publisher
 ros::Publisher pub_humidity("humidity_sensor", &humidity_msg);
@@ -38,7 +45,7 @@ const char RESPONSE_THRUSTER_STANDARD_LENGTH = 1 + 4 * 4 + 1 + 1;
 //The proppulsion command packets are typically sent as a multicast to a group ID defined for thrusters
 const char THRUSTER_GROUP_ID = 0x81;
 //lookup table to speed up checksum computation
-static PROGMEM prog_uint32_t crc_table[16] = {
+const static PROGMEM prog_uint32_t crc_table[16] = {
   0x00000000, 0x1db71064, 0x3b6e20c8, 0x26d930ac,
   0x76dc4190, 0x6b6b51f4, 0x4db26158, 0x5005713c,
   0xedb88320, 0xf00f9344, 0xd6d6a3e8, 0xcb61b38c,
@@ -66,6 +73,7 @@ String motor_speed = String(10);
 float thrust[2] = {0.0,0.0};
 char node_id = 100;
 boolean excelsior_lyfe = false;
+char motorResponseStorage[65];
 
 void render_mainpage(EthernetClient client)
 {
@@ -295,16 +303,24 @@ void update_motors(void)
 void get_motor_condition(){
   char node_id[]={0,1};
   char response;
+  int offset = 0;
   //get information from motor controller node 0
   set_motors_thrust(node_id[0],thrust,sizeof(thrust));
+  // Consider clearing global buffer. Could replace 0 with a string to show non-atomicity
+  memset(&motorResponseStorage[0],0, sizeof(motorResponseStorage));
   delay(100);
   if (Serial3.available()){
     Serial.println("Data from motorC node 0");
     while (Serial3.available()>0){
         response= Serial3.read();	//read Serial        
         Serial.println(response, HEX); 
+        // Write response to global storage variable
+        motorResponseStorage[offset] = response;
+        offset++; 
     }
   }
+  Serial.println("New stored array is: ");
+  Serial.print(motorResponseStorage);
   //get information from motor controller node 1
   set_motors_thrust(node_id[1],thrust,sizeof(thrust));
   delay(100);
@@ -328,6 +344,11 @@ void setup()
   server.begin();
   Serial.print("server is at ");
   Serial.println(Ethernet.localIP());
+  
+  //begin ros node
+  nh.initNode();
+  //begin ros topic
+  nh.advertise(motor_response);
 }
 
 void loop() {
@@ -342,6 +363,9 @@ void loop() {
   }*/
   update_motors();
   get_motor_condition();
+  str_msg.data="hello";
+  motor_response.publish(&str_msg);
+  nh.spinOnce();
   // give the web browser time to receive the data
   delay(1000);
   // close the connection:
