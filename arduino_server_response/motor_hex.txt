@@ -1,0 +1,432 @@
+Data Request at time: 2014-10-03 19:24:53 
+<!DOCTYPE HTML>
+<html><head><title>Boat Mechanics Zack Is The Coolest</title>
+<style>
+table,th,td
+{
+border:1px solid black;
+}
+</style></head>
+<body><center>Please select motor speed: </center>
+<center>MOTOR 1:
+<table>
+<tr>
+<td><form method='get' action=''><input type='submit' name='M1_0' value='0%'></input></form></td>
+<td><form method='get' action=''><input type='submit' name='M1_20' value='20%'></input></form></td>
+<td><form method='get' action=''><input type='submit' name='M1_40' value='40%'></input></form></td>
+<td><form method='get' action=''><input type='submit' name='M1_60' value='60%'></input></form></td>
+<td><form method='get' action=''><input type='submit' name='M1_80' value='80%'></input></form></td>
+<td><form method='get' action=''><input type='submit' name='M1_100' value='100%'></input></form></td>
+</tr>
+</table>
+MOTOR 2: 
+<table>
+<tr>
+<td><form method='get' action=''><input type='submit' name='M2_0' value='0%'></input></form></td>
+<td><form method='get' action=''><input type='submit' name='M2_20' value='20%'></input></form></td>
+<td><form method='get' action=''><input type='submit' name='M2_40' value='40%'></input></form></td>
+<td><form method='get' action=''><input type='submit' name='M2_60' value='60%'></input></form></td>
+<td><form method='get' action=''><input type='submit' name='M2_80' value='80%'></input></form></td>
+<td><form method='get' action=''><input type='submit' name='M2_100' value='100%'></input></form></td>
+</tr>
+</table>
+<br>
+<table>
+<tr>
+<td><form method='get' action=''><input type='submit' name='forward' value='Excelsior!'></input></form></td>
+</tr>
+</table>
+FFFFFFF0
+F
+1
+2
+FFFFFFF0
+12
+FFFFFF95
+C
+3D
+7A
+FFFFFF81
+0
+0
+0
+0
+51
+5F
+29
+42
+1
+0
+FFFFFFF0
+FFFFFFBC
+0
+0
+3A
+42
+0
+3E
+62
+FFFFFFF1
+2E
+</html>
+
+Data Request at time: 2014-10-03 19:25:06 
+<!DOCTYPE HTML>
+<html><head><title>Boat Mechanics Zack Is The Coolest</title>
+<style>
+table,th,td
+{
+border:1px solid black;
+}
+</style></head>
+<body><center>Please select motor speed: </center>
+<center>MOTOR 1:
+<table>
+<tr>
+<td><form method='get' action=''><input type='submit' name='M1_0' value='0%'></input></form></td>
+<td><form method='get' action=''><input type='submit' name='M1_20' value='20%'></input></form></td>
+<td><form method='get' action=''><input type='submit' name='M1_40' value='40%'></input></form></td>
+<td><form method='get' action=''><input type='submit' name='M1_60' value='60%'></input></form></td>
+<td><form method='get' action=''><input type='submit' name='M1_80' value='80%'></input></form></td>
+<td><form method='get' action=''><input type='submit' name='M1_100' value='100%'></input></form></td>
+</tr>
+</table>
+MOTOR 2: 
+<table>
+<tr>
+<td><form method='get' action=''><input type='submit' name='M2_0' value='0%'></input></form></td>
+<td><form method='get' action=''><input type='submit' name='M2_20' value='20%'></input></form></td>
+<td><form method='get' action=''><input type='submit' name='M2_40' value='40%'></input></form></td>
+<td><form method='get' action=''><input type='submit' name='M2_60' value='60%'></input></form></td>
+<td><form method='get' action=''><input type='submit' name='M2_80' value='80%'></input></form></td>
+<td><form method='get' action=''><input type='submit' name='M2_100' value='100%'></input></form></td>
+</tr>
+</table>
+<br>
+<table>
+<tr>
+<td><form method='get' action=''><input type='submit' name='forward' value='Excelsior!'></input></form></td>
+</tr>
+</table>
+FFFFFFF0
+F
+1
+2
+FFFFFFF0
+12
+FFFFFF95
+C
+3D
+7A
+FFFFFF81
+0
+0
+0
+0
+27
+3E
+29
+42
+1
+0
+FFFFFFF0
+FFFFFFBC
+0
+0
+3A
+42
+0
+0
+FFFFFFE1
+17
+FFFFFF87
+</html>
+
+Data Request at time: 2014-10-03 19:25:20 
+<!DOCTYPE HTML>
+<html><head><title>Boat Mechanics Zack Is The Coolest</title>
+<style>
+table,th,td
+{
+border:1px solid black;
+}
+</style></head>
+<body><center>Please select motor speed: </center>
+<center>MOTOR 1:
+<table>
+<tr>
+<td><form method='get' action=''><input type='submit' name='M1_0' value='0%'></input></form></td>
+<td><form method='get' action=''><input type='submit' name='M1_20' value='20%'></input></form></td>
+<td><form method='get' action=''><input type='submit' name='M1_40' value='40%'></input></form></td>
+<td><form method='get' action=''><input type='submit' name='M1_60' value='60%'></input></form></td>
+<td><form method='get' action=''><input type='submit' name='M1_80' value='80%'></input></form></td>
+<td><form method='get' action=''><input type='submit' name='M1_100' value='100%'></input></form></td>
+</tr>
+</table>
+MOTOR 2: 
+<table>
+<tr>
+<td><form method='get' action=''><input type='submit' name='M2_0' value='0%'></input></form></td>
+<td><form method='get' action=''><input type='submit' name='M2_20' value='20%'></input></form></td>
+<td><form method='get' action=''><input type='submit' name='M2_40' value='40%'></input></form></td>
+<td><form method='get' action=''><input type='submit' name='M2_60' value='60%'></input></form></td>
+<td><form method='get' action=''><input type='submit' name='M2_80' value='80%'></input></form></td>
+<td><form method='get' action=''><input type='submit' name='M2_100' value='100%'></input></form></td>
+</tr>
+</table>
+<br>
+<table>
+<tr>
+<td><form method='get' action=''><input type='submit' name='forward' value='Excelsior!'></input></form></td>
+</tr>
+</table>
+FFFFFFF0
+F
+1
+2
+FFFFFFF0
+12
+FFFFFF95
+C
+3D
+7A
+FFFFFF81
+0
+0
+0
+0
+FFFFFF93
+2D
+29
+42
+1
+0
+70
+FFFFFFBD
+0
+0
+3A
+42
+0
+FFFFFFF5
+45
+71
+FFFFFFD8
+</html>
+
+Data Request at time: 2014-10-03 19:25:33 
+<!DOCTYPE HTML>
+<html><head><title>Boat Mechanics Zack Is The Coolest</title>
+<style>
+table,th,td
+{
+border:1px solid black;
+}
+</style></head>
+<body><center>Please select motor speed: </center>
+<center>MOTOR 1:
+<table>
+<tr>
+<td><form method='get' action=''><input type='submit' name='M1_0' value='0%'></input></form></td>
+<td><form method='get' action=''><input type='submit' name='M1_20' value='20%'></input></form></td>
+<td><form method='get' action=''><input type='submit' name='M1_40' value='40%'></input></form></td>
+<td><form method='get' action=''><input type='submit' name='M1_60' value='60%'></input></form></td>
+<td><form method='get' action=''><input type='submit' name='M1_80' value='80%'></input></form></td>
+<td><form method='get' action=''><input type='submit' name='M1_100' value='100%'></input></form></td>
+</tr>
+</table>
+MOTOR 2: 
+<table>
+<tr>
+<td><form method='get' action=''><input type='submit' name='M2_0' value='0%'></input></form></td>
+<td><form method='get' action=''><input type='submit' name='M2_20' value='20%'></input></form></td>
+<td><form method='get' action=''><input type='submit' name='M2_40' value='40%'></input></form></td>
+<td><form method='get' action=''><input type='submit' name='M2_60' value='60%'></input></form></td>
+<td><form method='get' action=''><input type='submit' name='M2_80' value='80%'></input></form></td>
+<td><form method='get' action=''><input type='submit' name='M2_100' value='100%'></input></form></td>
+</tr>
+</table>
+<br>
+<table>
+<tr>
+<td><form method='get' action=''><input type='submit' name='forward' value='Excelsior!'></input></form></td>
+</tr>
+</table>
+FFFFFFF0
+F
+1
+2
+FFFFFFF0
+12
+FFFFFF95
+C
+3D
+7A
+FFFFFF81
+0
+0
+0
+0
+FFFFFFBD
+4E
+29
+42
+1
+0
+34
+FFFFFFBD
+0
+0
+38
+42
+0
+4C
+39
+FFFFFFE5
+7D
+</html>
+
+Data Request at time: 2014-10-03 19:25:46 
+<!DOCTYPE HTML>
+<html><head><title>Boat Mechanics Zack Is The Coolest</title>
+<style>
+table,th,td
+{
+border:1px solid black;
+}
+</style></head>
+<body><center>Please select motor speed: </center>
+<center>MOTOR 1:
+<table>
+<tr>
+<td><form method='get' action=''><input type='submit' name='M1_0' value='0%'></input></form></td>
+<td><form method='get' action=''><input type='submit' name='M1_20' value='20%'></input></form></td>
+<td><form method='get' action=''><input type='submit' name='M1_40' value='40%'></input></form></td>
+<td><form method='get' action=''><input type='submit' name='M1_60' value='60%'></input></form></td>
+<td><form method='get' action=''><input type='submit' name='M1_80' value='80%'></input></form></td>
+<td><form method='get' action=''><input type='submit' name='M1_100' value='100%'></input></form></td>
+</tr>
+</table>
+MOTOR 2: 
+<table>
+<tr>
+<td><form method='get' action=''><input type='submit' name='M2_0' value='0%'></input></form></td>
+<td><form method='get' action=''><input type='submit' name='M2_20' value='20%'></input></form></td>
+<td><form method='get' action=''><input type='submit' name='M2_40' value='40%'></input></form></td>
+<td><form method='get' action=''><input type='submit' name='M2_60' value='60%'></input></form></td>
+<td><form method='get' action=''><input type='submit' name='M2_80' value='80%'></input></form></td>
+<td><form method='get' action=''><input type='submit' name='M2_100' value='100%'></input></form></td>
+</tr>
+</table>
+<br>
+<table>
+<tr>
+<td><form method='get' action=''><input type='submit' name='forward' value='Excelsior!'></input></form></td>
+</tr>
+</table>
+FFFFFFF0
+F
+1
+2
+FFFFFFF0
+12
+FFFFFF95
+C
+3D
+7A
+FFFFFF81
+0
+0
+0
+0
+FFFFFFBD
+4E
+29
+42
+1
+0
+FFFFFFF0
+FFFFFFBC
+0
+0
+3A
+42
+0
+1F
+FFFFFF85
+6F
+FFFFFF8D
+</html>
+
+Data Request at time: 2014-10-03 19:25:59 
+<!DOCTYPE HTML>
+<html><head><title>Boat Mechanics Zack Is The Coolest</title>
+<style>
+table,th,td
+{
+border:1px solid black;
+}
+</style></head>
+<body><center>Please select motor speed: </center>
+<center>MOTOR 1:
+<table>
+<tr>
+<td><form method='get' action=''><input type='submit' name='M1_0' value='0%'></input></form></td>
+<td><form method='get' action=''><input type='submit' name='M1_20' value='20%'></input></form></td>
+<td><form method='get' action=''><input type='submit' name='M1_40' value='40%'></input></form></td>
+<td><form method='get' action=''><input type='submit' name='M1_60' value='60%'></input></form></td>
+<td><form method='get' action=''><input type='submit' name='M1_80' value='80%'></input></form></td>
+<td><form method='get' action=''><input type='submit' name='M1_100' value='100%'></input></form></td>
+</tr>
+</table>
+MOTOR 2: 
+<table>
+<tr>
+<td><form method='get' action=''><input type='submit' name='M2_0' value='0%'></input></form></td>
+<td><form method='get' action=''><input type='submit' name='M2_20' value='20%'></input></form></td>
+<td><form method='get' action=''><input type='submit' name='M2_40' value='40%'></input></form></td>
+<td><form method='get' action=''><input type='submit' name='M2_60' value='60%'></input></form></td>
+<td><form method='get' action=''><input type='submit' name='M2_80' value='80%'></input></form></td>
+<td><form method='get' action=''><input type='submit' name='M2_100' value='100%'></input></form></td>
+</tr>
+</table>
+<br>
+<table>
+<tr>
+<td><form method='get' action=''><input type='submit' name='forward' value='Excelsior!'></input></form></td>
+</tr>
+</table>
+FFFFFFF0
+F
+1
+2
+FFFFFFF0
+12
+FFFFFF95
+C
+3D
+7A
+FFFFFF81
+0
+0
+0
+0
+FFFFFFBD
+4E
+29
+42
+1
+0
+34
+FFFFFFBD
+0
+0
+3A
+42
+0
+22
+FFFFFFED
+61
+7E
+</html>
+
