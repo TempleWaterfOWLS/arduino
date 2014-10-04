@@ -72,7 +72,6 @@ String motor_speed = String(10);
 float thrust[2] = {0.0,0.0};
 char node_id = 100;
 boolean excelsior_lyfe = false;
-char motorResponseStorage[65];
 
 void render_mainpage(EthernetClient client)
 {
@@ -124,7 +123,7 @@ void render_mainpage(EthernetClient client)
   client.println("<td><form method='get' action=''><input type='submit' name='forward' value='Excelsior!'></input></form></td>");
   client.println("</tr>");
   client.println("</table>");
-  
+  client.println("</html>");
   return;
 }
 
@@ -135,7 +134,7 @@ void set_motor_params(char node_id)
   return;
 }
 
-void check_httpcontents(String readString)
+boolean check_httpcontents(String readString)
 {
   
   if (readString.indexOf("GET /?M1_0") != -1)
@@ -226,16 +225,22 @@ void check_httpcontents(String readString)
   {
       T_HTTP = millis();
       excelsior_lyfe = true;
-      Serial.println("FORWARD WAS PRESSED");
       set_motors_thrust(node_id,thrust,sizeof(thrust));
   }
-  return;
+  
+  else if(readString.indexOf("/pythoninfo") != -1)
+  {
+    return true;
+  }
+  
+  return false;
 }
 
 void get_requests(EthernetClient client)
 {
+  int string_iterator;
   String readString = String(100);
-  boolean currentLineIsBlank = true;
+  boolean currentLineIsBlank = true; boolean python_info = false;
   while (client.connected()) {
     if (client.available()) {
       char c = client.read();  
@@ -248,12 +253,27 @@ void get_requests(EthernetClient client)
        // so you can send a reply
        if (c == '\n' && currentLineIsBlank) 
         {
-         render_mainpage(client);
+         
          Serial.println("check_httpcontents");
          Serial.println(readString);
-         check_httpcontents(readString);
+         python_info = check_httpcontents(readString);
+         // If /pythoninfo was accessed 
+         // [UNTESTED BLOCK]
+         if (python_info) 
+         {
+           // Print each element of the string to the client
+           for (string_iterator = 0; string_iterator < motor_response.length(); string_iterator++)
+           {
+             client.println(motor_response[string_iterator],HEX);
+           }
+         }
+         // Otherwise, render the homepage 
+         else
+         {
+         render_mainpage(client);
+         }
+         // END [UNTESTED BLOCK]
          readString = "";
-         client.println("</html>");
          break;
         }
         if (c == '\n') 
@@ -302,20 +322,17 @@ void update_motors(void)
 void get_motor_condition(){
   char node_id[]={0,1};
   char response;
-  char motor_array[100];
-  int offset = 0;
-  
+  motor_response = "";  
   //get information from motor controller node 0
   set_motors_thrust(node_id[0],thrust,sizeof(thrust));
-  // Consider clearing global buffer. Could replace 0 with a string to show non-atomicity
-  //memset(&motorResponseStorage[0],0, sizeof(motorResponseStorage));
   delay(100);
-  if (Serial3.available()){
+  if (Serial3.available())
+  {
     Serial.println("Data from motorC node 0");
-    while (Serial3.available()>0){
+    while (Serial3.available()>0)
+    {
         response= Serial3.read();	//read Serial        
         Serial.print(response, HEX);
-        
     }
   }
   
@@ -323,15 +340,15 @@ void get_motor_condition(){
   //get information from motor controller node 1
   set_motors_thrust(node_id[1],thrust,sizeof(thrust));
   delay(100);
-  if (Serial3.available()){
+  if (Serial3.available())
+  {
     Serial.println("Data from motorC node 1");
-    while (Serial3.available()>0){
+    while (Serial3.available()>0)
+    {
         response= Serial3.read();	//read Serial        
         Serial.println(response, HEX);
         // Write response to global storage variable
         motor_response.concat(response);
-        //motor_array[offset] = response;
-        //offset++;  
     }
   }
   Serial.println("New stored array is: ");
@@ -342,7 +359,7 @@ void get_motor_condition(){
   Serial.print('-');
   }
   Serial.print("\n");
-  motor_response = "";
+
 }
 
 void setup()
@@ -365,14 +382,14 @@ void setup()
 
 void loop() {
   // Get current time
-/*  T_CUR = millis();
+  T_CUR = millis();
   // listen for incoming clients
   EthernetClient client = server.available();
   if (client) 
   {
     Serial.println("new client");
     get_requests(client);
-  }*/
+  }
   update_motors();
   get_motor_condition();
 /*  str_msg.data="hello";
@@ -381,7 +398,7 @@ void loop() {
   // give the web browser time to receive the data
   delay(1000);
   // close the connection:
-//  client.stop();
+  client.stop();
 }
 
 //checksum calculation
