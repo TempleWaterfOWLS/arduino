@@ -4,6 +4,8 @@ Intended to recover hex-digit information from the server, which indicates
 RPM data, and possibly other data ( I have no idea what the motor controllers return)
 INPUTS: None
 Outputs: Writes data to text file, 'motor_hex.txt' Written by Zack Smith 10/01/14
+USAGE: Python gather_data.py 
+Make sure you are connected to the yoloswag network before running!
 '''
 # Imports
 import requests
@@ -41,7 +43,7 @@ def main():
 		print "Getting Response..."
                 get_response = requests.get(url)
                 # Print out useful debugging information about the request
-                print_response(get_response)
+                # print_response(get_response)
                 # Parse response for hex data
 		print "Parsing Response..."
                 hex_data = parse_response(get_response)
