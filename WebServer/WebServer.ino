@@ -385,7 +385,7 @@ void loop() {
     get_requests(client);
   }
   update_motors();
-  get_motor_condition();
+  if (excelsior_lyfe) get_motor_condition();
 /*  str_msg.data="hello";
   motor_response.publish(&str_msg);
   nh.spinOnce(); */
