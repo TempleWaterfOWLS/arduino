@@ -96,6 +96,11 @@ void render_mainpage(EthernetClient client)
   client.println("<table>");
   client.println("<tr>");
   // Motor 1 table
+  client.println("<td><form method='get' action=''><input type='submit' name='inv_M1_100' value='-100%'></input></form></td>");
+  client.println("<td><form method='get' action=''><input type='submit' name='inv_M1_80' value='-80%'></input></form></td>");
+  client.println("<td><form method='get' action=''><input type='submit' name='inv_M1_60' value='-60%'></input></form></td>");
+  client.println("<td><form method='get' action=''><input type='submit' name='inv_M1_40' value='-40%'></input></form></td>");
+  client.println("<td><form method='get' action=''><input type='submit' name='inv_M1_20' value='-20%'></input></form></td>");
   client.println("<td><form method='get' action=''><input type='submit' name='M1_0' value='0%'></input></form></td>");
   client.println("<td><form method='get' action=''><input type='submit' name='M1_20' value='20%'></input></form></td>");
   client.println("<td><form method='get' action=''><input type='submit' name='M1_40' value='40%'></input></form></td>");
@@ -108,6 +113,11 @@ void render_mainpage(EthernetClient client)
   client.println("<table>");
   client.println("<tr>");
   // Motor 2 table
+  client.println("<td><form method='get' action=''><input type='submit' name='inv_M2_100' value='-100%'></input></form></td>");
+  client.println("<td><form method='get' action=''><input type='submit' name='inv_M2_80' value='-80%'></input></form></td>");
+  client.println("<td><form method='get' action=''><input type='submit' name='inv_M2_60' value='-60%'></input></form></td>");
+  client.println("<td><form method='get' action=''><input type='submit' name='inv_M2_40' value='-40%'></input></form></td>");
+  client.println("<td><form method='get' action=''><input type='submit' name='inv_M2_20' value='-20%'></input></form></td>");
   client.println("<td><form method='get' action=''><input type='submit' name='M2_0' value='0%'></input></form></td>");
   client.println("<td><form method='get' action=''><input type='submit' name='M2_20' value='20%'></input></form></td>");
   client.println("<td><form method='get' action=''><input type='submit' name='M2_40' value='40%'></input></form></td>");
@@ -216,7 +226,66 @@ boolean check_httpcontents(String readString)
       thrust[0] = 0;
       thrust[1] = 0;  
   }
+       else if (readString.indexOf("GET /?inv_M1_20") != -1)
+  {
+    // Apply Code to set motor 1 to -20% speed
+    thrust[0] = -1*.1*.2;
+  }
   
+  else if (readString.indexOf("GET /?inv_M1_40") != -1)
+  {
+    // Apply Code to set motor 1 to -40% speed
+    thrust[0] = -1*.1*.4;  
+  }
+  
+  else if (readString.indexOf("GET /?inv_M1_60") != -1)
+  {
+    // Apply Code to set motor 1 to -60% speed
+    thrust[0] = -1*.1*.6;  
+  }
+  
+  else if (readString.indexOf("GET /?inv_M1_80") != -1)
+  {
+    // Apply Code to set motor 1 to -80% speed
+    thrust[0] = -1*.1*.8;
+  }
+  
+  else if (readString.indexOf("GET /?inv_M1_100") != -1)
+  {
+    // Apply Code to set motor 1 to -100% speed
+    thrust[0] = -1*.1;  
+  }
+  
+    else if (readString.indexOf("GET /?inv_M2_20") != -1)
+  {
+    // Apply Code to set motor 2 to -20% speed
+    thrust[1] = -1*.1*.2;
+  }
+  
+  else if (readString.indexOf("GET /?inv_M2_40") != -1)
+  {
+    // Apply Code to set motor 2 to -40% speed
+    thrust[1] = -1*.1*.4;  
+  }
+  
+  else if (readString.indexOf("GET /?inv_M2_60") != -1)
+  {
+    // Apply Code to set motor 2 to -60% speed
+    thrust[1] = -1*.1*.6;  
+  }
+  
+  else if (readString.indexOf("GET /?inv_M2_80") != -1)
+  {
+    // Apply Code to set motor 2 to -80% speed
+    thrust[1] = -1*.1*.8;
+  }
+  
+  else if (readString.indexOf("GET /?inv_M2_100") != -1)
+  {
+    // Apply Code to set motor 2 to -100% speed
+    thrust[1] = -1*.1;  
+  }
+ 
   else if (readString.indexOf("GET /?reverse") != -1)
   {
     if (thrust[0] == 0 && thrust[1] == 0)  
