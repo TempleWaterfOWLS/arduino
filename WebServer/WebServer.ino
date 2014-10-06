@@ -134,6 +134,12 @@ void render_mainpage(EthernetClient client)
   client.println("<td><form method='get' action=''><input type='submit' name='stop' value='stop'></input></form></td>");
   client.println("<td><form method='get' action=''><input type='submit' name='reverse' value='reverse'></input></form></td>");
   client.println("</tr>");
+  client.println("</br>"); /*
+  client.println("<form action=''>");
+  client.println('First name: <input type="text" name="fname"><br>');
+  client.println('Last name: <input type="text" name="lname"><br>');
+  client.println('<input type="submit" value="Submit">');
+  client.println("</form>"); */
   client.println("</table>");
   client.println("</html>");
   return;
@@ -331,21 +337,22 @@ void get_requests(EthernetClient client)
          Serial.println(readString);
          python_info = check_httpcontents(readString);
          // If /pythoninfo was accessed 
-         // [UNTESTED BLOCK]
          if (python_info) 
          {
            // Print each element of the string to the client
+           client.println(thrust[0]);
+           client.println(thrust[1]);
            for (string_iterator = 0; string_iterator < motor_response.length(); string_iterator++)
            {
              client.println(motor_response[string_iterator],HEX);
            }
+            
          }
          // Otherwise, render the homepage 
          else
          {
          render_mainpage(client);
          }
-         // END [UNTESTED BLOCK]
          readString = "";
          break;
         }
@@ -385,10 +392,14 @@ void update_motors(void)
 void get_motor_condition(){
   char node_id[]={0,1};
   char response;
-  motor_response = "";  
+  int t_int_1 = int(thrust[0]*100);
+  int t_int_2 = int(thrust[1]*100);
+  
+  motor_response = ""; 
   //get information from motor controller node 0
   set_motors_thrust(node_id[0],thrust,sizeof(thrust));
   delay(100);
+  
   if (Serial3.available())
   {
     Serial.println("Data from motorC node 0");
@@ -396,12 +407,13 @@ void get_motor_condition(){
     {
         response= Serial3.read();	//read Serial        
         Serial.print(response, HEX);
+        motor_response.concat(response);
     }
   }
   
-  
   //get information from motor controller node 1
   set_motors_thrust(node_id[1],thrust,sizeof(thrust));
+  
   delay(100);
   if (Serial3.available())
   {
