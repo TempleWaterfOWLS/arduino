@@ -70,7 +70,7 @@ long ELAPSED;
 String motor_response = String();
 String motor_speed = String(10);
 float thrust[2] = {0.0,0.0};
-char node_id = 100;
+//char node_id = 100;
 boolean excelsior_lyfe = false;
 
 void render_mainpage(EthernetClient client)
@@ -129,13 +129,6 @@ void render_mainpage(EthernetClient client)
   return;
 }
 
-void set_motor_params(char node_id)
-{
-  
-  Serial.println(thrust[0]);
-  return;
-}
-
 boolean check_httpcontents(String readString)
 {
   
@@ -143,98 +136,85 @@ boolean check_httpcontents(String readString)
   {
     // Apply Code to set motor 1 to 0% speed
     thrust[0] = 0.00;
-    set_motor_params(node_id);
   }
         
   else if (readString.indexOf("GET /?M1_20")!= -1)
   {
     // Apply Code to set motor 1 to 20% speed
     thrust[0] = .1*.2;
-    set_motor_params(node_id);
   }
       
   else if (readString.indexOf("GET /?M1_40")!= -1)
   {
     // Apply Code to set motor 1 to 40% speed
     thrust[0] = .1*.4;
-    set_motor_params(node_id);
   }
         
   else if (readString.indexOf("GET /?M1_60")!= -1)
   {
     // Apply Code to set motor 1 to 60% speed
     thrust[0] = .1*.6;
-    set_motor_params(node_id);
   }
         
   else if (readString.indexOf("GET /?M1_80") != -1)
   {
     // Apply Code to set motor 1 to 80% speed
     thrust[0] = .1*.8;
-    set_motor_params(node_id);  
   }
        
   else if (readString.indexOf("GET /?M1_100") != -1)
   {
     // Apply Code to set motor 1 to 100% speed
     thrust[0] = .1;
-    set_motor_params(node_id);
   }
   
   else if (readString.indexOf("GET /?M2_0") != -1)
   {
     // Apply Code to set motor 2 to 0% speed
     thrust[1] = 0.00;
-    set_motor_params(node_id);
   }
   
   else if (readString.indexOf("GET /?M2_20") != -1)
   {
     // Apply Code to set motor 2 to 20% speed
     thrust[1] = .1*.2;
-    set_motor_params(node_id);
   }
   
   else if (readString.indexOf("GET /?M2_40") != -1)
   {
     // Apply Code to set motor 2 to 40% speed
-    thrust[1] = .1*.4;
-    set_motor_params(node_id);   
+    thrust[1] = .1*.4;  
   }
   
   else if (readString.indexOf("GET /?M2_60") != -1)
   {
     // Apply Code to set motor 2 to 60% speed
-    thrust[1] = .1*.6;
-    set_motor_params(node_id);   
+    thrust[1] = .1*.6;  
   }
   
   else if (readString.indexOf("GET /?M2_80") != -1)
   {
     // Apply Code to set motor 2 to 80% speed
     thrust[1] = .1*.8;
-    set_motor_params(node_id); 
   }
   
   else if (readString.indexOf("GET /?M2_100") != -1)
   {
     // Apply Code to set motor 2 to 100% speed
-    thrust[1] = .1;
-    set_motor_params(node_id);  
+    thrust[1] = .1;  
   }
   
   else if (readString.indexOf("GET /?forward") != -1)
   {
       T_HTTP = millis();
       excelsior_lyfe = true;
-      set_motors_thrust(node_id,thrust,sizeof(thrust));
+      set_motors_thrust(0,thrust,sizeof(thrust));
   }
 
   else if (readString.indexOf("GET /?stop") != -1)
   {
       thrust[0] = 0;
-      thrust[1] = 0; 
-      set_motor_params(node_id);   
+      thrust[1] = 0;  
   }
   
   else if (readString.indexOf("GET /?reverse") != -1)
@@ -243,13 +223,11 @@ boolean check_httpcontents(String readString)
     {
       thrust[0] = -.08;
       thrust[1] = -.08;
-      set_motor_params(node_id);
     }
     else
     {
       thrust[0] = -1 * thrust[0];
       thrust[1] = -1 * thrust[1];
-      set_motor_params(node_id);
     }
   }
   
@@ -265,7 +243,9 @@ void get_requests(EthernetClient client)
 {
   int string_iterator;
   String readString = String(100);
-  boolean currentLineIsBlank = true; boolean python_info = false;
+  boolean currentLineIsBlank = true; 
+  boolean python_info = false;
+  
   while (client.connected()) {
     if (client.available()) {
       char c = client.read();  
@@ -277,8 +257,7 @@ void get_requests(EthernetClient client)
        // character) and the line is blank, the http request has ended,
        // so you can send a reply
        if (c == '\n' && currentLineIsBlank) 
-        {
-         
+        {        
          Serial.println("check_httpcontents");
          Serial.println(readString);
          python_info = check_httpcontents(readString);
@@ -329,18 +308,8 @@ void update_motors(void)
      Serial.println(thrust[0]);
      Serial.print("Thrust[1] = ");
      Serial.println(thrust[1]);
-     Serial.println(node_id);
-     set_motors_thrust(node_id,thrust,sizeof(thrust));
-
+     set_motors_thrust(0,thrust,sizeof(thrust));
   } 
-  else if(T_HTTP == T_CUR)
-  {
-    return;
-  }
-  else
-  {
-    return;
-  }
 }
 
 //asks both motor controllers for information and prints output
@@ -421,7 +390,7 @@ void loop() {
   motor_response.publish(&str_msg);
   nh.spinOnce(); */
   // give the web browser time to receive the data
-  delay(1000);
+  delay(10);
   // close the connection:
   client.stop();
 }
@@ -446,6 +415,7 @@ unsigned long crc_string(char *s,char len)
   crc = ~crc;
   return crc;
 }
+
 byte set_motors_thrust(char node_id_respond, float thrust[], int thrust_length) {
   //group id for the request packet
   char group_id = THRUSTER_GROUP_ID;
