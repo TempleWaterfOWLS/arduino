@@ -7,10 +7,11 @@ Outputs: Writes data to text file, 'motor_hex.txt' Written by Zack Smith 10/01/1
 '''
 # Imports
 import requests
+import sys
 from time import strftime, sleep
 # Function designed to take input hex data and write to motor_hex.txt, along with timestamp formatted Year-month-day hour:minute:second
 def append_to_file(hex_data):
-        with open('motor_hex.txt', 'a') as data_file:
+        with open(sys.argv[1], 'a') as data_file:
                 data_file.write("Data Request at time: ")
                 data_file.write(strftime("%Y-%m-%d %H:%M:%S \n"))
                 data_file.write(str(hex_data) + '\n')
