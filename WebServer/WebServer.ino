@@ -121,6 +121,8 @@ void render_mainpage(EthernetClient client)
   client.println("<table>");
   client.println("<tr>");
   client.println("<td><form method='get' action=''><input type='submit' name='forward' value='Excelsior!'></input></form></td>");
+  client.println("<td><form method='get' action=''><input type='submit' name='stop' value='stop'></input></form></td>");
+  client.println("<td><form method='get' action=''><input type='submit' name='reverse' value='reverse'></input></form></td>");
   client.println("</tr>");
   client.println("</table>");
   client.println("</html>");
@@ -226,6 +228,29 @@ boolean check_httpcontents(String readString)
       T_HTTP = millis();
       excelsior_lyfe = true;
       set_motors_thrust(node_id,thrust,sizeof(thrust));
+  }
+
+  else if (readString.indexOf("GET /?stop") != -1)
+  {
+      thrust[0] = 0;
+      thrust[1] = 0; 
+      set_motor_params(node_id);   
+  }
+  
+  else if (readString.indexOf("GET /?reverse") != -1)
+  {
+    if (thrust[0] == 0 && thrust[1] == 0)  
+    {
+      thrust[0] = -.08;
+      thrust[1] = -.08;
+      set_motor_params(node_id);
+    }
+    else
+    {
+      thrust[0] = -1 * thrust[0];
+      thrust[1] = -1 * thrust[1];
+      set_motor_params(node_id);
+    }
   }
   
   else if(readString.indexOf("/pythoninfo") != -1)
