@@ -70,8 +70,8 @@ long ELAPSED;
 String motor_response = String();
 String motor_speed = String(10);
 float thrust[2] = {0.0,0.0};
-//char node_id = 100;
 boolean excelsior_lyfe = false;
+float power_scale = .1;
 
 void render_mainpage(EthernetClient client)
 {
@@ -134,13 +134,16 @@ void render_mainpage(EthernetClient client)
   client.println("<td><form method='get' action=''><input type='submit' name='stop' value='stop'></input></form></td>");
   client.println("<td><form method='get' action=''><input type='submit' name='reverse' value='reverse'></input></form></td>");
   client.println("</tr>");
-  client.println("</br>"); /*
-  client.println("<form action=''>");
-  client.println('First name: <input type="text" name="fname"><br>');
-  client.println('Last name: <input type="text" name="lname"><br>');
-  client.println('<input type="submit" value="Submit">');
-  client.println("</form>"); */
   client.println("</table>");
+  client.println("<br>");
+  client.println("<H1>SET POWER SCALE</H1>");
+  client.println("<FORM ACTION='/' method=get >"); //uses IP/port of web page
+  client.println("Power Scale Value: <INPUT TYPE=TEXT NAME='POW' VALUE='' SIZE='25' MAXLENGTH='50'><BR>");
+  client.println("<INPUT TYPE=SUBMIT NAME='submit' VALUE='Change Power Scale!'>");
+  client.println("</FORM>");
+  client.println("<br>");
+  client.println("CURRENT POWER SCALE:");
+  client.println(power_scale);
   client.println("</html>");
   return;
 }
@@ -157,31 +160,31 @@ boolean check_httpcontents(String readString)
   else if (readString.indexOf("GET /?M1_20")!= -1)
   {
     // Apply Code to set motor 1 to 20% speed
-    thrust[0] = .1*.2;
+    thrust[0] = power_scale*.2;
   }
       
   else if (readString.indexOf("GET /?M1_40")!= -1)
   {
     // Apply Code to set motor 1 to 40% speed
-    thrust[0] = .1*.4;
+    thrust[0] = power_scale*.4;
   }
         
   else if (readString.indexOf("GET /?M1_60")!= -1)
   {
     // Apply Code to set motor 1 to 60% speed
-    thrust[0] = .1*.6;
+    thrust[0] = power_scale*.6;
   }
         
   else if (readString.indexOf("GET /?M1_80") != -1)
   {
     // Apply Code to set motor 1 to 80% speed
-    thrust[0] = .1*.8;
+    thrust[0] = power_scale*.8;
   }
        
   else if (readString.indexOf("GET /?M1_100") != -1)
   {
     // Apply Code to set motor 1 to 100% speed
-    thrust[0] = .1;
+    thrust[0] = power_scale;
   }
   
   else if (readString.indexOf("GET /?M2_0") != -1)
@@ -193,31 +196,31 @@ boolean check_httpcontents(String readString)
   else if (readString.indexOf("GET /?M2_20") != -1)
   {
     // Apply Code to set motor 2 to 20% speed
-    thrust[1] = .1*.2;
+    thrust[1] = power_scale*.2;
   }
   
   else if (readString.indexOf("GET /?M2_40") != -1)
   {
     // Apply Code to set motor 2 to 40% speed
-    thrust[1] = .1*.4;  
+    thrust[1] = power_scale*.4;  
   }
   
   else if (readString.indexOf("GET /?M2_60") != -1)
   {
     // Apply Code to set motor 2 to 60% speed
-    thrust[1] = .1*.6;  
+    thrust[1] = power_scale*.6;  
   }
   
   else if (readString.indexOf("GET /?M2_80") != -1)
   {
     // Apply Code to set motor 2 to 80% speed
-    thrust[1] = .1*.8;
+    thrust[1] = power_scale*.8;
   }
   
   else if (readString.indexOf("GET /?M2_100") != -1)
   {
     // Apply Code to set motor 2 to 100% speed
-    thrust[1] = .1;  
+    thrust[1] = power_scale;  
   }
   
   else if (readString.indexOf("GET /?forward") != -1)
@@ -235,75 +238,87 @@ boolean check_httpcontents(String readString)
        else if (readString.indexOf("GET /?inv_M1_20") != -1)
   {
     // Apply Code to set motor 1 to -20% speed
-    thrust[0] = -1*.1*.2;
+    thrust[0] = -1*power_scale*.2;
   }
   
   else if (readString.indexOf("GET /?inv_M1_40") != -1)
   {
     // Apply Code to set motor 1 to -40% speed
-    thrust[0] = -1*.1*.4;  
+    thrust[0] = -1*power_scale*.4;  
   }
   
   else if (readString.indexOf("GET /?inv_M1_60") != -1)
   {
     // Apply Code to set motor 1 to -60% speed
-    thrust[0] = -1*.1*.6;  
+    thrust[0] = -1*power_scale*.6;  
   }
   
   else if (readString.indexOf("GET /?inv_M1_80") != -1)
   {
     // Apply Code to set motor 1 to -80% speed
-    thrust[0] = -1*.1*.8;
+    thrust[0] = -1*power_scale*.8;
   }
   
   else if (readString.indexOf("GET /?inv_M1_100") != -1)
   {
     // Apply Code to set motor 1 to -100% speed
-    thrust[0] = -1*.1;  
+    thrust[0] = -1*power_scale;  
   }
   
     else if (readString.indexOf("GET /?inv_M2_20") != -1)
   {
     // Apply Code to set motor 2 to -20% speed
-    thrust[1] = -1*.1*.2;
+    thrust[1] = -1*.2*power_scale;
   }
   
   else if (readString.indexOf("GET /?inv_M2_40") != -1)
   {
     // Apply Code to set motor 2 to -40% speed
-    thrust[1] = -1*.1*.4;  
+    thrust[1] = -1*power_scale*.4;  
   }
   
   else if (readString.indexOf("GET /?inv_M2_60") != -1)
   {
     // Apply Code to set motor 2 to -60% speed
-    thrust[1] = -1*.1*.6;  
+    thrust[1] = -1*power_scale*.6;  
   }
   
   else if (readString.indexOf("GET /?inv_M2_80") != -1)
   {
     // Apply Code to set motor 2 to -80% speed
-    thrust[1] = -1*.1*.8;
+    thrust[1] = -1*power_scale*.8;
   }
   
   else if (readString.indexOf("GET /?inv_M2_100") != -1)
   {
     // Apply Code to set motor 2 to -100% speed
-    thrust[1] = -1*.1;  
+    thrust[1] = -1*power_scale;  
   }
  
   else if (readString.indexOf("GET /?reverse") != -1)
   {
     if (thrust[0] == 0 && thrust[1] == 0)  
     {
-      thrust[0] = -.08;
-      thrust[1] = -.08;
+      thrust[0] = -.08*power_scale;
+      thrust[1] = -.08*power_scale;
     }
     else
     {
       thrust[0] = -1 * thrust[0];
       thrust[1] = -1 * thrust[1];
     }
+  }
+  
+  else if (readString.indexOf("/?POW") != -1)
+  {
+    int get_index = readString.indexOf("POW");
+    get_index = get_index + 4;
+    int p_mod_1 = int(readString[get_index])-48;
+    int p_mod_2 = int(readString[get_index+1])-48;
+    Serial.println(p_mod_1);
+    Serial.println(p_mod_2);
+    power_scale = (p_mod_1*10 + p_mod_2);
+    power_scale = power_scale/100.0;
   }
   
   else if(readString.indexOf("/pythoninfo") != -1)
