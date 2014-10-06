@@ -384,7 +384,6 @@ void loop() {
     Serial.println("new client");
     get_requests(client);
   }
-
   update_motors();
   if (excelsior_lyfe) get_motor_condition();
 /*  str_msg.data="hello";
@@ -392,10 +391,7 @@ void loop() {
   nh.spinOnce(); */
   // give the web browser time to receive the data
   delay(10);
-  if (!client.connected() and !client.available())
-  {
-   thrust[0] = 0; thrust[1] = 0;  
-  }
+  client.stop();
   // close the connection:
   
 }
