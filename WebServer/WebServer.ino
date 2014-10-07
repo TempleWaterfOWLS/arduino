@@ -314,7 +314,19 @@ boolean check_httpcontents(String readString)
     int get_index = readString.indexOf("POW");
     get_index = get_index + 4;
     int p_mod_1 = int(readString[get_index])-48;
+    if (p_mod_1 < 0 || p_mod_1 > 9)
+    {
+      power_scale = 0;
+      return false;
+    }
     int p_mod_2 = int(readString[get_index+1])-48;
+    
+    if ( p_mod_2 < 0 || p_mod_2 > 9)
+    {
+      power_scale = 0;
+      return false;
+    }
+    
     Serial.println(p_mod_1);
     Serial.println(p_mod_2);
     power_scale = (p_mod_1*10 + p_mod_2);
