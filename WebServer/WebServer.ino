@@ -234,6 +234,7 @@ boolean check_httpcontents(String readString)
   {
       thrust[0] = 0;
       thrust[1] = 0;  
+      excelsior_lyfe = false;
   }
        else if (readString.indexOf("GET /?inv_M1_20") != -1)
   {
