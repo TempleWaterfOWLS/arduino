@@ -56,21 +56,12 @@ def main():
 		amps_hex = [hex_data[i] for i in idx_amps]
 		temp_hex = [hex_data[i] for i in idx_idx]
 		for x in range (0, len(rpm_hex));
-		rpm_hex_array += rpm_hex[x]
-		for x in range (0, len(volts_hex));
-		volts_hex_array += volts_hex[x]
-		for x in range (0, len(amps_hex));
-		amps_hex_array += amps_hax[x]
-		for x in range (0, len(temp_hex));
-		temp_hex_array += temp_hex[x]
-		rpm = struct.unpack('!f', 'rpm_hex_array'.decode('hex'))[0]
-		volts = struct.unpack('!f', 'volts_hex_array'.decode('hex'))[0]
-		amps = struct.unpack('!f', 'amps_hex_array'.decode('hex'))[0]
-		temp = struct.unpack('!f', 'temp_hex_array'.decode('hex'))[0]
-		print "The rpms of the motors are: %/f" %rpm
-		print "The voltage on the bus is: %f" %volts
-		print "The amperage on the bus is: %f" %amps
-		print "The Tempature of the control boards is:%f" %temp
+		for x in range (0, len(rpm_hex));
+                rpm_hex_array += rpm_hex[x]rpm_hex_array += rpm_hex[x]
+		for x in range (0, len(rpm_hex));
+                rpm_hex_array += rpm_hex[x]
+		for x in range (0, len(rpm_hex));
+                rpm_hex_array += rpm_hex[x]
 		float_values_split = hex_data.split('\n');
                 float_values = struct.unpack('!f', 'float_values_split'.decode('hex'))[0]
 		print float_values

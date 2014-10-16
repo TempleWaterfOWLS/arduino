@@ -133,6 +133,8 @@ void render_mainpage(EthernetClient client)
   client.println("<td><form method='get' action=''><input type='submit' name='forward' value='Excelsior!'></input></form></td>");
   client.println("<td><form method='get' action=''><input type='submit' name='stop' value='stop'></input></form></td>");
   client.println("<td><form method='get' action=''><input type='submit' name='reverse' value='reverse'></input></form></td>");
+  client.println("<td><form method='get' action=''><input type='submit' name='left' value='left'></input></form></td>");
+  client.println("<td><form method='get' action=''><input type='submit' name='right' value='right'></input></form></td>");
   client.println("</tr>");
   client.println("</table>");
   client.println("</html>");
@@ -286,6 +288,20 @@ boolean check_httpcontents(String readString)
     thrust[1] = -1*.1;  
   }
  
+  else if (readString.indexOf("GET /?left") != -1)
+  {
+    // Apply Code to set motor 2 to -100% speed
+    thrust[0] = -.1;
+    thrust[1] = .1;  
+  }
+
+  else if (readString.indexOf("GET /?right") != -1)
+  {
+    // Apply Code to set motor 2 to -100% speed
+    thrust[0] = .1;
+    thrust[1] = -.1;  
+  }
+  
   else if (readString.indexOf("GET /?reverse") != -1)
   {
     if (thrust[0] == 0 && thrust[1] == 0)  
