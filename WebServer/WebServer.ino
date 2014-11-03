@@ -426,7 +426,7 @@ void get_motor_condition(){
   motor_response = ""; 
   //get information from motor controller node 0
   set_motors_thrust(node_id[0],thrust,sizeof(thrust));
-  delay(100);
+  delay(50);
   
   if (Serial3.available())
   {
@@ -442,7 +442,7 @@ void get_motor_condition(){
   //get information from motor controller node 1
   set_motors_thrust(node_id[1],thrust,sizeof(thrust));
   
-  delay(100);
+  delay(50);
   if (Serial3.available())
   {
     Serial.println("Data from motorC node 1");
