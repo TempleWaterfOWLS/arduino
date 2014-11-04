@@ -70,8 +70,8 @@ long ELAPSED;
 String motor_response = String();
 String motor_speed = String(10);
 float thrust[2] = {0.0,0.0};
-//char node_id = 100;
 boolean excelsior_lyfe = false;
+float power_scale = .1;
 
 void render_mainpage(EthernetClient client)
 {
@@ -96,6 +96,11 @@ void render_mainpage(EthernetClient client)
   client.println("<table>");
   client.println("<tr>");
   // Motor 1 table
+  client.println("<td><form method='get' action=''><input type='submit' name='inv_M1_100' value='-100%'></input></form></td>");
+  client.println("<td><form method='get' action=''><input type='submit' name='inv_M1_80' value='-80%'></input></form></td>");
+  client.println("<td><form method='get' action=''><input type='submit' name='inv_M1_60' value='-60%'></input></form></td>");
+  client.println("<td><form method='get' action=''><input type='submit' name='inv_M1_40' value='-40%'></input></form></td>");
+  client.println("<td><form method='get' action=''><input type='submit' name='inv_M1_20' value='-20%'></input></form></td>");
   client.println("<td><form method='get' action=''><input type='submit' name='M1_0' value='0%'></input></form></td>");
   client.println("<td><form method='get' action=''><input type='submit' name='M1_20' value='20%'></input></form></td>");
   client.println("<td><form method='get' action=''><input type='submit' name='M1_40' value='40%'></input></form></td>");
@@ -108,6 +113,11 @@ void render_mainpage(EthernetClient client)
   client.println("<table>");
   client.println("<tr>");
   // Motor 2 table
+  client.println("<td><form method='get' action=''><input type='submit' name='inv_M2_100' value='-100%'></input></form></td>");
+  client.println("<td><form method='get' action=''><input type='submit' name='inv_M2_80' value='-80%'></input></form></td>");
+  client.println("<td><form method='get' action=''><input type='submit' name='inv_M2_60' value='-60%'></input></form></td>");
+  client.println("<td><form method='get' action=''><input type='submit' name='inv_M2_40' value='-40%'></input></form></td>");
+  client.println("<td><form method='get' action=''><input type='submit' name='inv_M2_20' value='-20%'></input></form></td>");
   client.println("<td><form method='get' action=''><input type='submit' name='M2_0' value='0%'></input></form></td>");
   client.println("<td><form method='get' action=''><input type='submit' name='M2_20' value='20%'></input></form></td>");
   client.println("<td><form method='get' action=''><input type='submit' name='M2_40' value='40%'></input></form></td>");
@@ -125,6 +135,15 @@ void render_mainpage(EthernetClient client)
   client.println("<td><form method='get' action=''><input type='submit' name='reverse' value='reverse'></input></form></td>");
   client.println("</tr>");
   client.println("</table>");
+  client.println("<br>");
+  client.println("<H1>SET POWER SCALE</H1>");
+  client.println("<FORM ACTION='/' method=get >"); //uses IP/port of web page
+  client.println("Power Scale Value: <INPUT TYPE=TEXT NAME='POW' VALUE='' SIZE='25' MAXLENGTH='50'><BR>");
+  client.println("<INPUT TYPE=SUBMIT NAME='submit' VALUE='Change Power Scale!'>");
+  client.println("</FORM>");
+  client.println("<br>");
+  client.println("CURRENT POWER SCALE:");
+  client.println(power_scale);
   client.println("</html>");
   return;
 }
@@ -141,31 +160,31 @@ boolean check_httpcontents(String readString)
   else if (readString.indexOf("GET /?M1_20")!= -1)
   {
     // Apply Code to set motor 1 to 20% speed
-    thrust[0] = .1*.2;
+    thrust[0] = power_scale*.2;
   }
       
   else if (readString.indexOf("GET /?M1_40")!= -1)
   {
     // Apply Code to set motor 1 to 40% speed
-    thrust[0] = .1*.4;
+    thrust[0] = power_scale*.4;
   }
         
   else if (readString.indexOf("GET /?M1_60")!= -1)
   {
     // Apply Code to set motor 1 to 60% speed
-    thrust[0] = .1*.6;
+    thrust[0] = power_scale*.6;
   }
         
   else if (readString.indexOf("GET /?M1_80") != -1)
   {
     // Apply Code to set motor 1 to 80% speed
-    thrust[0] = .1*.8;
+    thrust[0] = power_scale*.8;
   }
        
   else if (readString.indexOf("GET /?M1_100") != -1)
   {
     // Apply Code to set motor 1 to 100% speed
-    thrust[0] = .1;
+    thrust[0] = power_scale;
   }
   
   else if (readString.indexOf("GET /?M2_0") != -1)
@@ -177,31 +196,31 @@ boolean check_httpcontents(String readString)
   else if (readString.indexOf("GET /?M2_20") != -1)
   {
     // Apply Code to set motor 2 to 20% speed
-    thrust[1] = .1*.2;
+    thrust[1] = power_scale*.2;
   }
   
   else if (readString.indexOf("GET /?M2_40") != -1)
   {
     // Apply Code to set motor 2 to 40% speed
-    thrust[1] = .1*.4;  
+    thrust[1] = power_scale*.4;  
   }
   
   else if (readString.indexOf("GET /?M2_60") != -1)
   {
     // Apply Code to set motor 2 to 60% speed
-    thrust[1] = .1*.6;  
+    thrust[1] = power_scale*.6;  
   }
   
   else if (readString.indexOf("GET /?M2_80") != -1)
   {
     // Apply Code to set motor 2 to 80% speed
-    thrust[1] = .1*.8;
+    thrust[1] = power_scale*.8;
   }
   
   else if (readString.indexOf("GET /?M2_100") != -1)
   {
     // Apply Code to set motor 2 to 100% speed
-    thrust[1] = .1;  
+    thrust[1] = power_scale;  
   }
   
   else if (readString.indexOf("GET /?forward") != -1)
@@ -215,20 +234,104 @@ boolean check_httpcontents(String readString)
   {
       thrust[0] = 0;
       thrust[1] = 0;  
+      excelsior_lyfe = false;
+  }
+       else if (readString.indexOf("GET /?inv_M1_20") != -1)
+  {
+    // Apply Code to set motor 1 to -20% speed
+    thrust[0] = -1*power_scale*.2;
   }
   
+  else if (readString.indexOf("GET /?inv_M1_40") != -1)
+  {
+    // Apply Code to set motor 1 to -40% speed
+    thrust[0] = -1*power_scale*.4;  
+  }
+  
+  else if (readString.indexOf("GET /?inv_M1_60") != -1)
+  {
+    // Apply Code to set motor 1 to -60% speed
+    thrust[0] = -1*power_scale*.6;  
+  }
+  
+  else if (readString.indexOf("GET /?inv_M1_80") != -1)
+  {
+    // Apply Code to set motor 1 to -80% speed
+    thrust[0] = -1*power_scale*.8;
+  }
+  
+  else if (readString.indexOf("GET /?inv_M1_100") != -1)
+  {
+    // Apply Code to set motor 1 to -100% speed
+    thrust[0] = -1*power_scale;  
+  }
+  
+    else if (readString.indexOf("GET /?inv_M2_20") != -1)
+  {
+    // Apply Code to set motor 2 to -20% speed
+    thrust[1] = -1*.2*power_scale;
+  }
+  
+  else if (readString.indexOf("GET /?inv_M2_40") != -1)
+  {
+    // Apply Code to set motor 2 to -40% speed
+    thrust[1] = -1*power_scale*.4;  
+  }
+  
+  else if (readString.indexOf("GET /?inv_M2_60") != -1)
+  {
+    // Apply Code to set motor 2 to -60% speed
+    thrust[1] = -1*power_scale*.6;  
+  }
+  
+  else if (readString.indexOf("GET /?inv_M2_80") != -1)
+  {
+    // Apply Code to set motor 2 to -80% speed
+    thrust[1] = -1*power_scale*.8;
+  }
+  
+  else if (readString.indexOf("GET /?inv_M2_100") != -1)
+  {
+    // Apply Code to set motor 2 to -100% speed
+    thrust[1] = -1*power_scale;  
+  }
+ 
   else if (readString.indexOf("GET /?reverse") != -1)
   {
     if (thrust[0] == 0 && thrust[1] == 0)  
     {
-      thrust[0] = -.08;
-      thrust[1] = -.08;
+      thrust[0] = -.08*power_scale;
+      thrust[1] = -.08*power_scale;
     }
     else
     {
       thrust[0] = -1 * thrust[0];
       thrust[1] = -1 * thrust[1];
     }
+  }
+  
+  else if (readString.indexOf("/?POW") != -1)
+  {
+    int get_index = readString.indexOf("POW");
+    get_index = get_index + 4;
+    int p_mod_1 = int(readString[get_index])-48;
+    if (p_mod_1 < 0 || p_mod_1 > 9)
+    {
+      power_scale = 0;
+      return false;
+    }
+    int p_mod_2 = int(readString[get_index+1])-48;
+    
+    if ( p_mod_2 < 0 || p_mod_2 > 9)
+    {
+      power_scale = 0;
+      return false;
+    }
+    
+    Serial.println(p_mod_1);
+    Serial.println(p_mod_2);
+    power_scale = (p_mod_1*10 + p_mod_2);
+    power_scale = power_scale/100.0;
   }
   
   else if(readString.indexOf("/pythoninfo") != -1)
@@ -262,21 +365,22 @@ void get_requests(EthernetClient client)
          Serial.println(readString);
          python_info = check_httpcontents(readString);
          // If /pythoninfo was accessed 
-         // [UNTESTED BLOCK]
          if (python_info) 
          {
            // Print each element of the string to the client
+           client.println(thrust[0]);
+           client.println(thrust[1]);
            for (string_iterator = 0; string_iterator < motor_response.length(); string_iterator++)
            {
              client.println(motor_response[string_iterator],HEX);
            }
+            
          }
          // Otherwise, render the homepage 
          else
          {
          render_mainpage(client);
          }
-         // END [UNTESTED BLOCK]
          readString = "";
          break;
         }
@@ -316,10 +420,14 @@ void update_motors(void)
 void get_motor_condition(){
   char node_id[]={0,1};
   char response;
-  motor_response = "";  
+  int t_int_1 = int(thrust[0]*100);
+  int t_int_2 = int(thrust[1]*100);
+  
+  motor_response = ""; 
   //get information from motor controller node 0
   set_motors_thrust(node_id[0],thrust,sizeof(thrust));
-  delay(100);
+  delay(50);
+  
   if (Serial3.available())
   {
     Serial.println("Data from motorC node 0");
@@ -327,13 +435,14 @@ void get_motor_condition(){
     {
         response= Serial3.read();	//read Serial        
         Serial.print(response, HEX);
+        motor_response.concat(response);
     }
   }
   
-  
   //get information from motor controller node 1
   set_motors_thrust(node_id[1],thrust,sizeof(thrust));
-  delay(100);
+  
+  delay(50);
   if (Serial3.available())
   {
     Serial.println("Data from motorC node 1");
@@ -384,7 +493,6 @@ void loop() {
     Serial.println("new client");
     get_requests(client);
   }
-
   update_motors();
   if (excelsior_lyfe) get_motor_condition();
 /*  str_msg.data="hello";
@@ -392,10 +500,7 @@ void loop() {
   nh.spinOnce(); */
   // give the web browser time to receive the data
   delay(10);
-  if (!client.connected() and !client.available())
-  {
-   thrust[0] = 0; thrust[1] = 0;  
-  }
+  client.stop();
   // close the connection:
   
 }
