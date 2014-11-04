@@ -1,0 +1,24 @@
+Data Request at time: 2014-11-03 19:42:17 
+0.40
+0.40
+
+Data Request at time: 2014-11-03 19:42:18 
+0.40
+0.40
+
+Data Request at time: 2014-11-03 19:42:18 
+0.40
+0.40
+
+Data Request at time: 2014-11-03 19:42:19 
+0.40
+0.40
+
+Data Request at time: 2014-11-03 19:42:19 
+0.40
+0.40
+
+Data Request at time: 2014-11-03 19:42:20 
+0.40
+0.40
+
